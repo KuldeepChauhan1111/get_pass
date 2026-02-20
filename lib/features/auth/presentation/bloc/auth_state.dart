@@ -1,28 +1,37 @@
-import 'package:get_pass/features/auth/domain/entity/auth_entity.dart';
+import 'package:equatable/equatable.dart';
 import 'package:get_pass/features/auth/domain/entity/user_entity.dart';
 
-class AuthState {
-  AuthState init() {
-    return AuthState();
-  }
+abstract class AuthState extends Equatable {
+  const AuthState();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class AuthInitialState extends AuthState {
-  AuthInitialState();
+  const AuthInitialState();
 }
 
 class AuthLoadingState extends AuthState {
-  AuthLoadingState();
+  const AuthLoadingState();
 }
 
 class AuthSuccessState extends AuthState {
-  UserEntity userEntity;
-  String token;
-  String refreshToken;
-  AuthSuccessState(this.userEntity,this.refreshToken,this.token);
+  final UserEntity user;
+  final String refreshToken;
+  final String accessToken;
+
+  const AuthSuccessState(this.user, this.refreshToken, this.accessToken);
+
+  @override
+  List<Object?> get props => [user, refreshToken, accessToken];
 }
 
 class AuthFailureState extends AuthState {
-  String? message;
-  AuthFailureState({this.message});
+  final String message;
+
+  const AuthFailureState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }
