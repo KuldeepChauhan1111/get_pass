@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_pass/core/di/setup_globle_get_it.dart';
+import 'package:get_pass/features/auth/di/auth_di.dart';
 import 'package:get_pass/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:get_pass/features/auth/presentation/pages/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await setUpGetIt();
+  await setupDi();
   runApp(const MyApp());
 }
 
@@ -24,4 +25,10 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+
+
+Future<void> setupDi()async{
+  await setUpGetIt();
+  await authGetItFnc();
 }
