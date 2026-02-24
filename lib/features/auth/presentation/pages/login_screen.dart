@@ -24,11 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onLoginPressed() {
     context.read<AuthBloc>().add(
-          LoginRequestEvent(
-            emailController.text.trim(),
-            passwordController.text,
-          ),
-        );
+      LoginRequestEvent(emailController.text.trim(), passwordController.text),
+    );
   }
 
   @override
@@ -38,15 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthFailureState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-
-          if (state is AuthSuccessState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Welcome ${state.user.email}')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {

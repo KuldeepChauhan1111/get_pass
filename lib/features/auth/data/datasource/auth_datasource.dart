@@ -1,8 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:get_pass/core/constants/api_constants.dart';
-import 'package:get_pass/core/error/execptions.dart';
+import 'package:get_pass/core/error/failure.dart';
 import 'package:get_pass/core/model/api_response_model.dart';
 import 'package:get_pass/core/network/network_repository.dart';
+import 'package:get_pass/core/storage/token_storage.dart';
 import 'package:get_pass/features/auth/data/model/auth_model.dart';
 
 abstract class AuthRemoteDataSource {
@@ -14,8 +15,9 @@ abstract class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final NetworkRepository networkRepository;
+  final TokenStorage tokenStorage;
 
-  AuthRemoteDataSourceImpl(this.networkRepository);
+  AuthRemoteDataSourceImpl(this.networkRepository,this.tokenStorage);
 
   @override
   Future<Either<Failure, AuthModel>> login(
@@ -32,9 +34,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     return result.fold(
           (failure) => Left(failure),
-          (ApiResponse response) {
+          (ApiResponse response)async {
         if (response.success == true) {
-          return Right(AuthModel.fromJson(response.data));
+
+          AuthModel authModel = AuthModel.fromJson(response.data);
+          // 🔐 STORE TOKENS HERE
+          await tokenStorage.saveTokens(
+            accessToken: authModel.accessToken,
+            refreshToken: authModel.refreshToken,
+          );
+          return Right(authModel);
         } else {
           return Left(
             ServerFailure(response.message ?? 'Login failed'),

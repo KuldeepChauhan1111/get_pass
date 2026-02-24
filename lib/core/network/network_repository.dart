@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:get_pass/core/error/execptions.dart';
+import 'package:get_pass/core/error/failure.dart';
 import 'package:get_pass/core/model/api_response_model.dart';
 
 abstract class NetworkRepository {

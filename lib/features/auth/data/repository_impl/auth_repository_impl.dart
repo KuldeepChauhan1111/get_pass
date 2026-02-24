@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:get_pass/core/error/execptions.dart';
+import 'package:get_pass/core/error/failure.dart';
 import 'package:get_pass/features/auth/data/datasource/auth_datasource.dart';
 import 'package:get_pass/features/auth/data/model/auth_model.dart';
 import 'package:get_pass/features/auth/domain/entity/auth_entity.dart';

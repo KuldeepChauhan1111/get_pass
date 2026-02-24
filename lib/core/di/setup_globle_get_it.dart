@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:get_pass/core/network/network_repository.dart';
 import 'package:get_pass/core/network/network_repository_impl.dart';
+import 'package:get_pass/core/storage/token_storage.dart';
 import 'package:get_pass/core/utils/network_info.dart';
 import 'package:get_pass/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +18,10 @@ Future<void> setUpGetIt() async {
     InternetConnection.createInstance,
   );
 
+  globalGetIt.registerLazySingleton<TokenStorage>(
+        () => TokenStorage(),
+  );
+
   globalGetIt.registerLazySingleton<http.Client>(http.Client.new);
 
   globalGetIt.registerLazySingleton<NetworkInfo>(
@@ -27,6 +32,7 @@ Future<void> setUpGetIt() async {
     () => NetworkRepositoryImpl(
       client: globalGetIt<http.Client>(),
       networkInfo: globalGetIt<NetworkInfo>(),
+      tokenStorage: globalGetIt<TokenStorage>()
     ),
   );
 

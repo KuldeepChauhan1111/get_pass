@@ -3,8 +3,9 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:get_pass/core/constants/api_constants.dart';
-import 'package:get_pass/core/error/execptions.dart';
+import 'package:get_pass/core/error/failure.dart';
 import 'package:get_pass/core/model/api_response_model.dart';
+import 'package:get_pass/core/storage/token_storage.dart';
 import 'package:get_pass/core/utils/network_info.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,8 +14,9 @@ import 'network_repository.dart';
 class NetworkRepositoryImpl implements NetworkRepository {
   final http.Client client;
   final NetworkInfo networkInfo;
+  final TokenStorage tokenStorage;
 
-  NetworkRepositoryImpl({required this.client, required this.networkInfo});
+  NetworkRepositoryImpl({required this.client, required this.networkInfo,required this.tokenStorage});
 
   @override
   Future<Either<Failure, ApiResponse>> postMethod({
@@ -33,7 +35,7 @@ class NetworkRepositoryImpl implements NetworkRepository {
 
       final response = await client.post(
         uri,
-        headers: _defaultHeaders(),
+        headers: await _defaultHeaders(),
         body: jsonEncode(params),
       );
 
@@ -63,7 +65,7 @@ class NetworkRepositoryImpl implements NetworkRepository {
 
       final response = await client.get(
         uri,
-        headers: _defaultHeaders(),
+        headers: await _defaultHeaders(),
       );
 
       return _handleResponse(response);
@@ -83,7 +85,6 @@ class NetworkRepositoryImpl implements NetworkRepository {
   Map<String, String> _defaultHeaders() {
     return {
       HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.acceptHeader: 'application/json',
     };
   }
 
